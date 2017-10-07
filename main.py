@@ -10,12 +10,14 @@ from reportlab.graphics import renderPDF
 
 URL = 'http://services.swpc.noaa.gov/text/predicted-sunspot-radio-flux.txt'
 COMMENT_CHARS = '#:'
+ENCODING='utf-8'
 
 
 drawing = Drawing(400, 200)
 data = []
 
 for line in urlopen(URL).readlines():
+    line = line.decode(ENCODING)
     if not line.isspace() and not line[0] in COMMENT_CHARS:
         data.append([float(n) for n in line.split()])
 
@@ -29,7 +31,7 @@ lp.x = 50
 lp.y = 50
 lp.height = 125
 lp.width = 300
-lp.data = [zip(times, pred), zip(times, high), zip(times, low)]
+lp.data = [list(zip(times, pred)), list(zip(times, high)), list(zip(times, low))]
 lp.lines[0].strokeColor = colors.blue
 lp.lines[1].strokeColor = colors.red
 lp.lines[2].strokeColor = colors.green
